@@ -43,13 +43,14 @@ function initializeProductCreation() {
   }
 }
 
+
 // return array of imgs to be display
 function selectProductsToBeDisplay() {
 
   var productsToBeDisplay = [];
   var imgIndexSelected = [];
   for( var i = 0; i < NUMBER_OF_IMAGE_DISPLAY; i++) {
-    var randIndex = generateRandomIndex();
+    var randIndex = generateRandomIndex(imgIndexSelected);
 
     imgIndexSelected.push(randIndex);
 
@@ -65,12 +66,14 @@ function selectProductsToBeDisplay() {
 }
 
 // generate a random index that has not been selected on previous display
-function generateRandomIndex() {
+function generateRandomIndex(imgIndexSelected) {
   var randIndex = Math.floor(Math.random() * products.length);
-  while (previouslyDisplayedIndexs.includes(randIndex)) {
+  while (previouslyDisplayedIndexs.includes(randIndex) || imgIndexSelected.includes(randIndex) ) {
     randIndex = Math.floor(Math.random() * products.length);
   }
+
   return randIndex;
+
 }
 
 function attachProductsToDom(productsToDisplay) {
