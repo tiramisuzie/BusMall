@@ -1,5 +1,5 @@
 'use strict';
-var NUMBER_OF_IMAGE_DISPLAY = 3;
+var NUMBER_OF_IMAGE_DISPLAY = 3; //don't set higher than 8
 var MAXIMUM_VOTES = 25;
 
 var previouslyDisplayedIndexs = [];
@@ -30,7 +30,8 @@ var totalVotes = 0;
 
 // constructor for products
 function Product (filename) {
-  this.filename=filename;
+  this.filename = filename;
+  this.name = filename.substring(4, filename.length-4);
   this.votes = 0;
   this.displayed = 0;
 }
@@ -131,7 +132,7 @@ function displayListProducts(){
     li.appendChild(img);
     ul.appendChild(li);
     var div = document.createElement('div');
-    div.textContent = 'Votes:' + products[i].votes;
+    div.textContent = products[i].name + ' votes:' + products[i].votes;
     li.appendChild(div);
   }
 }
