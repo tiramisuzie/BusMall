@@ -1,126 +1,147 @@
 'use strict';
+var NUMBER_OF_IMAGE_DISPLAY = 3;
+var MAXIMUM_VOTES = 25;
 
-var previous1;
-var previous2;
-var previous3;
-var product1;
-var product2;
-var product3;
-var img1 = document.getElementsByTagName('img')[0];
-var img2 = document.getElementsByTagName('img')[1];
-var img3 = document.getElementsByTagName('img')[2];
+var previouslyDisplayedIndexs = [];
+var imgUrls = [
+  'img/bag.jpg',
+  'img/banana.jpg',
+  'img/breakfast.jpg',
+  'img/bathroom.jpg',
+  'img/boots.jpg',
+  'img/bubblegum.jpg',
+  'img/chair.jpg',
+  'img/cthulhu.jpg',
+  'img/dog-duck.jpg',
+  'img/dragon.jpg',
+  'img/pen.jpg',
+  'img/pet-sweep.jpg',
+  'img/scissors.jpg',
+  'img/shark.jpg',
+  'img/sweep.png',
+  'img/tauntaun.jpg',
+  'img/unicorn.jpg',
+  'img/usb.gif',
+  'img/water-can.jpg',
+  'img/wine-glass.jpg'
+];
+var products = [];
+var totalVotes = 0;
+
 // constructor for products
-
 function Product (filename) {
   this.filename=filename;
   this.votes = 0;
   this.displayed = 0;
-  Product.allProducts.push(this);
 }
 
-Product.allProducts= [];
-
-new Product ('img/bag.jpg');
-new Product ('img/banana.jpg');
-new Product ('img/breakfast.jpg');
-new Product ('img/bathroom.jpg');
-new Product ('img/boots.jpg');
-new Product ('img/bubblegum.jpg');
-new Product ('img/chair.jpg');
-new Product ('img/cthulhu.jpg');
-new Product ('img/dog-duck.jpg');
-new Product ('img/dragon.jpg');
-new Product ('img/pen.jpg');
-new Product ('img/pet-sweep.jpg');
-new Product ('img/scissors.jpg');
-new Product ('img/shark.jpg');
-new Product ('img/sweep.png');
-new Product ('img/tauntaun.jpg');
-new Product ('img/unicorn.jpg');
-new Product ('img/usb.gif');
-new Product ('img/water-can.jpg');
-new Product ('img/wine-glass.jpg');
-
-
-
-function displayThreeNewProducts() {
-  //show new pictures to user
-  //grab 3 pictures at random
-
-  var randIndex = Math.floor(Math.random() * Product.allProducts.length);
-
-  while (randIndex === previous1 || randIndex === previous2 || randIndex === previous3){
-    randIndex = Math.floor(Math.random() * Product.allProducts.length);
-
+// create a product object for each img url
+function initializeProductCreation() {
+  for(var i = 0; i < imgUrls.length; i++) {
+    var product = new Product(imgUrls[i]);
+    products.push(product);
   }
-  product1 = Product.allProducts[randIndex];
-  do {
-    var secondProductIndex = Math.floor(Math.random() * Product.allProducts.length);
-  } while (
-    secondProductIndex === previous1 ||
-    secondProductIndex === previous2 ||
-    secondProductIndex === previous3 ||
-    secondProductIndex === randIndex ||
-    secondProductIndex === thirdProductIndex
-  );
-  product2 = Product.allProducts[secondProductIndex];
+}
 
-  do {
-    var thirdProductIndex = Math.floor(Math.random() * Product.allProducts.length);
-  } while (
-    thirdProductIndex === previous1 ||
-    thirdProductIndex === previous2 ||
-    thirdProductIndex === previous3 ||
-    thirdProductIndex === randIndex ||
-    thirdProductIndex === secondProductIndex
-  );
-  product3 = Product.allProducts[thirdProductIndex];
-  previous1 = randIndex;
-  previous2 = secondProductIndex;
-  previous3 = thirdProductIndex;
+// return array of imgs to be display
+function selectProductsToBeDisplay() {
+
+  var productsToBeDisplay = [];
+  var imgIndexSelected = [];
+  for( var i = 0; i < NUMBER_OF_IMAGE_DISPLAY; i++) {
+    var randIndex = generateRandomIndex();
+
+    imgIndexSelected.push(randIndex);
+
+    var product = products[randIndex];
+    product.displayed++;
+    productsToBeDisplay.push(product);
+  }
+
+  // replace previously used index with current index
+  previouslyDisplayedIndexs = imgIndexSelected;
+
+  return productsToBeDisplay;
+}
+
+// generate a random index that has not been selected on previous display
+function generateRandomIndex() {
+  var randIndex = Math.floor(Math.random() * products.length);
+  while (previouslyDisplayedIndexs.includes(randIndex)) {
+    randIndex = Math.floor(Math.random() * products.length);
+  }
+  return randIndex;
+}
+
+function attachProductsToDom(productsToDisplay) {
+  var container = document.getElementById('container');
+  clearChild(container);
+
+  var ul = document.createElement('ul');
+  for (var i = 0; i < productsToDisplay.length; i++) {
+    var li = document.createElement('li');
+    var img = createImg(productsToDisplay[i]);
+    li.appendChild(img);
+    ul.appendChild(li);
+  }
+  container.appendChild(ul);
+}
+
+// delete all the child in the element
+function clearChild(container) {
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+}
 
 
-  console.log ('product 1' , product1);
-  // change img src on the page to match the 3 new products
-  img1.src = product1.filename;
-  product1.displayed++;
-  img2.src = product2.filename;
-  product2.displayed++;
-  img3.src = product3.filename;
-  product3.displayed++;
+// create img and assign url to img src
+function createImg(productToBeDisplay) {
+  var img = document.createElement('img');
+  img.src = productToBeDisplay.filename;
+  img.addEventListener('click', function() {
+  // add to votes for that goat
+    productToBeDisplay.votes++;
+    totalVotes++;
+    console.log(this);
+    var productsToBeDisplay = selectProductsToBeDisplay();
+    attachProductsToDom(productsToBeDisplay);
+
+    if (totalVotes === MAXIMUM_VOTES) {
+      var container = document.getElementById('container');
+      clearChild(container);
+      displayListProducts();
+    }
+  }.bind(productToBeDisplay));
+  return img;
 }
 
 
 
-
-// event listeners
-// where are we listening? The images
-// what are we listening for? click
-img1.addEventListener('click', function() {
-  // add to votes for that goat
-  product1.votes++;
-  // goat1.votes = goat1.votes + 1;
-  displayThreeNewProducts();
-});
-
-img2.addEventListener('click', function() {
-  // what should we do?
-  // add to votes for that goat
-  product2.votes++;
-  // goat1.votes = goat1.votes + 1;
-  displayThreeNewProducts();
-});
-img3.addEventListener('click', function() {
-  // what should we do?
-  // add to votes for that goat
-  product3.votes++;
-  // goat1.votes = goat1.votes + 1;
-  displayThreeNewProducts();
-
-});
-displayThreeNewProducts();
+function displayListProducts(){
+  var ul = document.getElementById ('showlist');
+  for (var i = 0; i < products.length; i++) {
+    products[i].filename;
+    var li = document.createElement('li');
+    var img = document.createElement('img');
+    img.src = products[i].filename;
+    li.appendChild(img);
+    ul.appendChild(li);
+    var div = document.createElement('div');
+    div.textContent = 'Votes:' + products[i].votes;
+    li.appendChild(div);
+  }
+}
 
 
-//After 25 selections have been made, turn off the event listeners on the images
-//add product votes
-//Display a list of the products with votes received
+
+// step 1 create products
+initializeProductCreation();
+
+// step 2 calculate products to be display
+var productsToBeDisplay = selectProductsToBeDisplay();
+
+// step 3 render on display
+attachProductsToDom(productsToBeDisplay);
+
+
