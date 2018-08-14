@@ -2,6 +2,10 @@ img {
   
   max-width: 200px;
 }
+img:hover {
+  opacity: .5;
+}
+
 
 li {
   display: inline-block;
