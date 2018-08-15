@@ -1,6 +1,6 @@
 'use strict';
 var NUMBER_OF_IMAGE_DISPLAY = 3; //don't set higher than 8
-var MAXIMUM_VOTES = 25;
+var MAXIMUM_VOTES = 8;
 
 var previouslyDisplayedIndexs = [];
 var imgUrls = [
@@ -29,19 +29,30 @@ var products = [];
 var totalVotes = 0;
 
 // constructor for products
-function Product (filename) {
+function Product (filename, votes = 0, displayed = 0) {
   this.filename = filename;
   this.name = filename.substring(4, filename.length-4);
-  this.votes = 0;
-  this.displayed = 0;
+  this.votes = votes;
+  this.displayed = displayed;
 }
 
 // create a product object for each img url
 function initializeProductCreation() {
-  for(var i = 0; i < imgUrls.length; i++) {
-    var product = new Product(imgUrls[i]);
-    products.push(product);
+  var productsStoredLocally = JSON.parse(localStorage.getItem('products'));
+  if (productsStoredLocally) {
+    console.log('PRODUCTS FROM LOCAL STORAGE');
+    for (var i = 0; i < productsStoredLocally.length; i++) {
+      var product = new Product (productsStoredLocally[i].filename, productsStoredLocally[i].votes, productsStoredLocally[i].displayed);
+      products.push(product);
+    }
+  } else {
+    console.log('PRODCUTS CREATED BY US');
+    for(var j = 0; j < imgUrls.length; j++) {
+      product = new Product(imgUrls[j]);
+      products.push(product);
+    }
   }
+
 }
 
 
@@ -115,6 +126,8 @@ function createImg(productToBeDisplay) {
       var container = document.getElementById('container');
       clearChild(container);
       displayListProducts();
+      // save results to local storage
+      localStorage.setItem('products', JSON.stringify(products));
     }
   }.bind(productToBeDisplay));
   return img;
@@ -130,66 +143,73 @@ function displayListProducts(){
     names.push(products[i].name);
     votes.push(products[i].votes);
 
-
-    // var li = document.createElement('li');
-    // var img = document.createElement('img');
-    // img.src = products[i].filename;
-    // li.appendChild(img);
-    // ul.appendChild(li);
-    // var div = document.createElement('div');
-    // div.textContent = products[i].name + ' votes:' + products[i].votes;
-    // li.appendChild(div);
-
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-      type: 'horizontalBar',
-      data: {
-        labels: names,
-        datasets: [{
-          label: '# of Votes',
-          data: votes, // these numbers seem important
-          backgroundColor: [
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-            'rgba(63, 191, 191, 0.2)',
-
-          ],
-          borderColor: 'rgb(0,0,0)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-
-        scales: {
-          xAxes: [{
-            ticks: {
-              beginAtZero:true,
-              suggestedMax: 6,
-              autoSkip: false,
-              step: 1,
-            }
-          }]
-        }
-      }
-    });
   }
+  // var li = document.createElement('li');
+  // var img = document.createElement('img');
+  // img.src = products[i].filename;
+  // li.appendChild(img);
+  // ul.appendChild(li);
+  // var div = document.createElement('div');
+  // div.textContent = products[i].name + ' votes:' + products[i].votes;
+  // li.appendChild(div);
+
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+      labels: names,
+      datasets: [{
+        label: '# of Votes',
+        data: votes, // these numbers seem important
+        backgroundColor: [
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+          'rgba(63, 191, 191, 0.2)',
+
+        ],
+        borderColor: 'rgb(0,0,0)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+
+      scales: {
+        xAxes: [{
+          ticks: {
+            beginAtZero:true,
+            suggestedMax: 6,
+            autoSkip: true,
+            step: 1,
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero:true,
+            suggestedMax: 6,
+            autoSkip: true,
+            step: 1,
+          }
+        }]
+      }
+    }
+  });
 }
 
 
@@ -203,5 +223,3 @@ var productsToBeDisplay = selectProductsToBeDisplay();
 
 // step 3 render on display
 attachProductsToDom(productsToBeDisplay);
-
-
