@@ -1,6 +1,6 @@
 'use strict';
 var NUMBER_OF_IMAGE_DISPLAY = 3; //don't set higher than 8
-var MAXIMUM_VOTES = 25;
+var MAXIMUM_VOTES = 5;
 
 var previouslyDisplayedIndexs = [];
 var imgUrls = [
@@ -123,19 +123,60 @@ function createImg(productToBeDisplay) {
 
 
 function displayListProducts(){
-  var ul = document.getElementById ('showlist');
+  // var ul = document.getElementById ('showlist');
+  var names = [];
+  var votes = [];
   for (var i = 0; i < products.length; i++) {
-    products[i].filename;
-    var li = document.createElement('li');
-    var img = document.createElement('img');
-    img.src = products[i].filename;
-    li.appendChild(img);
-    ul.appendChild(li);
-    var div = document.createElement('div');
-    div.textContent = products[i].name + ' votes:' + products[i].votes;
-    li.appendChild(div);
+    names.push(products[i].name);
+    votes.push(products[i].votes);
+
+
+    // var li = document.createElement('li');
+    // var img = document.createElement('img');
+    // img.src = products[i].filename;
+    // li.appendChild(img);
+    // ul.appendChild(li);
+    // var div = document.createElement('div');
+    // div.textContent = products[i].name + ' votes:' + products[i].votes;
+    // li.appendChild(div);
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: {
+        labels: names,
+        datasets: [{
+          label: '# of Votes',
+          data: votes, // these numbers seem important
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: 'rgb(0,0,0)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+
+        scales: {
+          xAxes: [{
+            ticks: {
+              beginAtZero:true,
+              suggestedMax: 6,
+              autoSkip: false,
+              step: 1,
+            }
+          }]
+        }
+      }
+    });
   }
 }
+
 
 
 
