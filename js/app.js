@@ -1,6 +1,6 @@
 'use strict';
 var NUMBER_OF_IMAGE_DISPLAY = 3; //don't set higher than 8
-var MAXIMUM_VOTES = 25;
+var MAXIMUM_VOTES = 5;
 
 var previouslyDisplayedIndexs = [];
 var imgUrls = [
@@ -142,7 +142,7 @@ function displayListProducts(){
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
-      type: 'bar',
+      type: 'horizontalBar',
       data: {
         labels: names,
         datasets: [{
@@ -161,11 +161,14 @@ function displayListProducts(){
         }]
       },
       options: {
+
         scales: {
-          yAxes: [{
+          xAxes: [{
             ticks: {
               beginAtZero:true,
-              suggestedMax: 6
+              suggestedMax: 6,
+              autoSkip: false,
+              step: 1,
             }
           }]
         }

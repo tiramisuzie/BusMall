@@ -10,3 +10,6 @@ img:hover {
 li {
   display: inline-block;
 }
+
+#chart {width: 800px;
+}
