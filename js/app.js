@@ -1,6 +1,6 @@
 'use strict';
 var NUMBER_OF_IMAGE_DISPLAY = 3; //don't set higher than 8
-var MAXIMUM_VOTES = 5;
+var MAXIMUM_VOTES = 25;
 
 var previouslyDisplayedIndexs = [];
 var imgUrls = [
@@ -149,12 +149,27 @@ function displayListProducts(){
           label: '# of Votes',
           data: votes, // these numbers seem important
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+            'rgba(63, 191, 191, 0.2)',
+
           ],
           borderColor: 'rgb(0,0,0)',
           borderWidth: 1
